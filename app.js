@@ -49,6 +49,7 @@ io.on('connection', function(socket) {
             for: 'everyone',
             noteFreq: props.noteFreq,
             noteType: props.noteType,
+            noteVol: props.noteVol,
             author: playerBoard[socket.id].name
         });
     });

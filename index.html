@@ -17,7 +17,9 @@
     <div class="container">
         <div class="row">
             <div class="col">
+                <!-- Options -->
                 <div class="container">
+                    <!-- Waveform selector -->
                     <label for="note-type-list">Waveform:</label>
                     <select name="cars" id="note-type-list">
                         <option value="sine">Sine</option>
@@ -25,8 +27,15 @@
                         <option value="triangle">Triangle</option>
                         <option value="sawtooth">Sawtooth</option>
                     </select> 
+
+                    <!-- Volume knob -->
+                    <div class="container">
+                        <label for="volume-knob">Volume</label>
+                        <webaudio-knob id="volume-knob"  sprites="100" value="50" min="0" max="100"></webaudio-knob>
+                    </div>
                 </div>
 
+                <!-- Keyboard -->
                 <div class="container">
                     <webaudio-keyboard keys="25" id="keyboard"></webaudio-keyboard>
                     <p>Use your keyboard to play some notes.</p>

@@ -5,20 +5,24 @@ class SoundSynth {
         this.adsrCurve = new Float32Array(100);
     }
 
-    init(freq, type) {
+    init(freq, type, vol) {
         this.gainNode = this.context.createGain();
-        this.gainNode.gain.value = 0.01;
+        this.gainNode.gain.value = 0.5; // ramp
+
+        this.gainNode2 = this.context.createGain();
+        this.gainNode2.gain.value = vol; // ramp
         
         this.oscillator = this.context.createOscillator();
         this.oscillator.type = type;
         this.oscillator.frequency.value = freq;
 
         this.oscillator.connect(this.gainNode);
-        this.gainNode.connect(this.context.destination);
+        this.gainNode.connect(this.gainNode2);
+        this.gainNode2.connect(this.context.destination);
     }
 
-    play(freq, type, adsr_t, adsr_a) {
-        this.init(freq, type);
+    play(freq, type, adsr_t, adsr_a, vol) {
+        this.init(freq, type, vol);
         this.makeRamp(adsr_t, adsr_a);
         this.oscillator.start(this.context.currentTime);
     }
