@@ -29,7 +29,18 @@ document.querySelector("#play-tone").addEventListener('click', () => {
     socket.emit('broadcast tone', { noteFreq: noteFreq });
 });
 
+socket.on('update playerboard', (props) => {
+    // Reset list
+    document.querySelector('#player-board').innerHTML = '';
+    for(const player of props.players) {
+        var node = document.createElement('li');
+        var textnode = document.createTextNode(player);
+        node.appendChild(textnode);
+        document.getElementById('player-board').appendChild(node);
+    }
+});
+
 socket.on('play tone', (props) => {
-    console.log("Playing tone " + props.noteFreq);
+    console.log("Playing tone " + props.noteFreq + ' | author: ' + props.author);
     playTone(props.noteFreq);
 });

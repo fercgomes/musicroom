@@ -7,13 +7,26 @@
 <body>
    <h1>Music room</h1> 
 
-   <button id="play-tone">Play tone</button> 
+    <div>
+        <button id="play-tone">Play tone</button> 
+        <input type="range" id="frequency" min="220" max="880" value="440" step="10">
+    </div>
 
-   <input type="range" id="frequency" min="220" max="880" value="440" step="10">
+    <div>
+        <ul id="player-board">
+
+        </ul>
+    </div>
+
+   <div>
+       <ul id="messages">
+       </ul>
+   </div>
 
 </body>
 
 <script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script src="/static/game.js"></script>
 
 </html>

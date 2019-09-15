@@ -26,8 +26,16 @@ io.on('connection', function(socket) {
     console.log(user_id + " has connected.");
 
     socket.on('broadcast tone', (props) => {
-        console.log('Broadcast received (freq: ' + props.noteFreq + ')');
-        io.emit('play tone', { for: 'everyone', noteFreq: props.noteFreq });
+        console.log('Broadcast received (freq: ' + props.noteFreq + ', from id: + ' + socket.id + ')');
+        io.emit('play tone', {
+            for: 'everyone',
+            noteFreq: props.noteFreq,
+            author: socket.id
+        });
     });
-
 });
+
+setInterval(() => {
+    let players = Object.keys(io.sockets.sockets);
+    io.emit('update playerboard', { players: players });
+}, 1000);
