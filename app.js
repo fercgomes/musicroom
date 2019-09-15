@@ -8,15 +8,16 @@ const app = express();
 const server = http.Server(app);
 const io = socketIO(server);
 
-app.set('port', 5000);
+var port = process.env.PORT || 3000;
+
 app.use('/static', express.static(__dirname + '/static')); // routing
 app.get('/', (request, response) => {
     response.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Start the server
-server.listen(5000, () => {
-    console.log('Starting server on port 5000');
+server.listen(port, () => {
+    console.log('Starting server on port ' + port);
 });
 
 // Add websocket handlers
