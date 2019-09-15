@@ -29,12 +29,18 @@ document.querySelector("#play-tone").addEventListener('click', () => {
     socket.emit('broadcast tone', { noteFreq: noteFreq });
 });
 
-socket.on('update playerboard', (props) => {
+document.querySelector('#set-username').addEventListener('click', function() {
+    let username = document.getElementById('user').value;
+
+    socket.emit('change username', username);
+});
+
+socket.on('update playerboard', (playerBoard) => {
     // Reset list
     document.querySelector('#player-board').innerHTML = '';
-    for(const player of props.players) {
+    for(const [key, value] of Object.entries(playerBoard)) {
         var node = document.createElement('li');
-        var textnode = document.createTextNode(player);
+        var textnode = document.createTextNode(value.name);
         node.appendChild(textnode);
         document.getElementById('player-board').appendChild(node);
     }
