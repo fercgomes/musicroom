@@ -20,13 +20,17 @@ let noteFreq = 440;
 
 freqControl.addEventListener('input', function() {
     noteFreq = this.value;
-    console.log(this.value);
 });
 
+let noteTypeElem = document.querySelector('#note-type-list');
+
 document.querySelector("#play-tone").addEventListener('click', () => {
-    console.log("Broadcasting (from client) tone.");
-    //playTone();
-    socket.emit('broadcast tone', { noteFreq: noteFreq });
+    console.log("Broadcasting tone.");
+
+    socket.emit('broadcast tone', {
+        noteFreq: noteFreq,
+        noteType: noteTypeElem.value,
+    });
 });
 
 document.querySelector('#set-username').addEventListener('click', function() {
@@ -47,6 +51,10 @@ socket.on('update playerboard', (playerBoard) => {
 });
 
 socket.on('play tone', (props) => {
-    console.log("Playing tone " + props.noteFreq + ' | author: ' + props.author);
-    playTone(props.noteFreq);
+    console.log("Receveing tone. Frequency: " + props.noteFreq + ', author: ' + props.author);
+    let osc = new SoundSynth(audioCtx);
+    osc.init(props.noteFreq, 'sine');
+    adsr_t = [0.1, 0.2, 0.2, 0.5]; // in seconds
+    adsr_a = [0.5, 0.4, 0.4, 0.0]; // [0 ~1];
+    osc.play(props.noteFreq, props.noteType, adsr_t, adsr_a);
 });

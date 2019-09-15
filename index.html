@@ -16,6 +16,14 @@
     <div>
         <button id="play-tone">Play tone</button> 
         <input type="range" id="frequency" min="220" max="880" value="440" step="10">
+
+        <select name="cars" id="note-type-list">
+            <option value="sine">Sine</option>
+            <option value="square" selected>Square</option>
+            <option value="triangle">Triangle</option>
+            <option value="sawtooth">Sawtooth</option>
+        </select> 
+
     </div>
 
     <div>
@@ -33,6 +41,7 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-<script src="/static/game.js"></script>
+<script type="text/javascript" src="/static/SoundSynth.js"></script>
+<script type="text/javascript" src="/static/game.js"></script>
 
 </html>

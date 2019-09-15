@@ -34,7 +34,8 @@ io.on('connection', function(socket) {
         io.emit('play tone', {
             for: 'everyone',
             noteFreq: props.noteFreq,
-            author: socket.id
+            noteType: props.noteType,
+            author: playerBoard[socket.id].name
         });
     });
 
