@@ -1,0 +1,22 @@
+body {
+    background-color: beige;
+}
+
+#title {
+    text-align: center;
+}
+
+#player-board {
+    list-style-type: none;
+    padding: 0px;
+}
+
+.set-user-btn {
+    width: 25%;
+    align-content: center;
+}
+
+.set-user-form {
+    width: 50%;
+    padding: 10px;
+}

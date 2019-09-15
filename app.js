@@ -12,6 +12,15 @@ var port = process.env.PORT || 3000;
 
 let playerBoard = {};
 
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
 app.use('/static', express.static(__dirname + '/static')); // routing
 app.get('/', (request, response) => {
     response.sendFile(path.join(__dirname, 'index.html'));
@@ -26,10 +35,15 @@ server.listen(port, () => {
 io.on('connection', function(socket) {
     let user_id = socket.id;
     console.log(user_id + " has connected.");
-
+    
+    let timer = 100;
     // Send tone to everyone
     socket.on('broadcast tone', (props) => {
         console.log('Broadcast received (freq: ' + props.noteFreq + ', from id: + ' + socket.id + ')');
+
+        let user = socket.id;
+        playerBoard[user].isPlaying = true;
+        playerBoard[user].isPlayingTimer = timer;
 
         io.emit('play tone', {
             for: 'everyone',
@@ -45,7 +59,13 @@ io.on('connection', function(socket) {
     });
 
     // Setup user
-    playerBoard[socket.id] = { name: 'anonymous' };
+    playerBoard[socket.id] = {
+        name: 'anonymous',
+        color: getRandomColor(),
+        isPlayingTimer: 0,
+        isPlaying: false
+    };
+
 
     socket.on('disconnect', () => {
         console.log(socket.id + " has disconnected.");
@@ -53,7 +73,22 @@ io.on('connection', function(socket) {
     });
 });
 
+// Refresh playerboard
+refreshRate = 5;
+setInterval(() => {
+    // Update isPlaying
+    for(const [key, value] of Object.entries(playerBoard)) {
+        if(value.isPlayingTimer == 0) {
+            value.isPlaying = false;
+        }
+        if(value.isPlayingTimer > 0) {
+            value.isPlayingTimer--;
+        }
+    }
+}, refreshRate);
+
+// Update playerboard
 setInterval(() => {
     let players = Object.keys(io.sockets.sockets);
     io.emit('update playerboard', playerBoard);
-}, 1000);
+}, 500);

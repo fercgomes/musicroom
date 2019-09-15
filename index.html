@@ -3,44 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>Sandbox</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="/static/index.css">
+
 </head>
 <body>
-    <div>
-        <h1>Music room</h1> 
+    <h1 id="title">MUSIC ROOM</h1> 
 
-        <span>Username: </span>
-        <input type="text" id="user" name="username">
-        <button id="set-username">Set</button>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="container">
+                    <label for="note-type-list">Waveform:</label>
+                    <select name="cars" id="note-type-list">
+                        <option value="sine">Sine</option>
+                        <option value="square" selected>Square</option>
+                        <option value="triangle">Triangle</option>
+                        <option value="sawtooth">Sawtooth</option>
+                    </select> 
+                </div>
+
+                <div class="container">
+                    <webaudio-keyboard keys="25" id="keyboard"></webaudio-keyboard>
+                    <p>Use your keyboard to play some notes.</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="form-group">
+                    <label for="user">Player name</label>
+                    <input class="set-user-form form-control" type="text" id="user" name="username">
+                    <button class="set-user-btn btn btn-dark" id="set-username">Set</button>
+                </div>
+
+                <h3>Players online:</h3>
+                <ul id="player-board"></ul>
+            </div>
+        </div>
     </div>
-
-    <div>
-        <button id="play-tone">Play tone</button> 
-        <input type="range" id="frequency" min="220" max="880" value="440" step="10">
-
-        <select name="cars" id="note-type-list">
-            <option value="sine">Sine</option>
-            <option value="square" selected>Square</option>
-            <option value="triangle">Triangle</option>
-            <option value="sawtooth">Sawtooth</option>
-        </select> 
-
-    </div>
-
-    <div>
-        <ul id="player-board">
-
-        </ul>
-    </div>
-
-    <div>
-        <webaudio-keyboard keys="25" id="keyboard"></webaudio-keyboard>
-    </div>
-
-   <div>
-       <ul id="messages">
-       </ul>
-   </div>
-
 </body>
 
 <script src="/socket.io/socket.io.js"></script>

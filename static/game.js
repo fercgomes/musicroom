@@ -6,7 +6,6 @@ var audioCtx = new AudioContext({
 
 let socket = io();
 
-const freqControl = document.querySelector("#frequency");
 let noteFreq = 440;
 
 // Create frequency table
@@ -18,22 +17,7 @@ function createFreqTable(baseFrequency, size) {
 }
 createFreqTable(440.0, 25);
 
-// Change test frequency
-freqControl.addEventListener('input', function() {
-    noteFreq = this.value;
-});
-
 let noteTypeElem = document.querySelector('#note-type-list');
-
-// Play test tone
-document.querySelector("#play-tone").addEventListener('click', () => {
-    console.log("Broadcasting tone.");
-
-    socket.emit('broadcast tone', {
-        noteFreq: noteFreq,
-        noteType: noteTypeElem.value,
-    });
-});
 
 // Set new username
 document.querySelector('#set-username').addEventListener('click', function() {
@@ -50,6 +34,12 @@ socket.on('update playerboard', (playerBoard) => {
         var node = document.createElement('li');
         var textnode = document.createTextNode(value.name);
         node.appendChild(textnode);
+
+        if(value.isPlaying)
+            node.style.color = value.color;
+        else    
+            node.style.color = '#000000';
+
         document.getElementById('player-board').appendChild(node);
     }
 });
