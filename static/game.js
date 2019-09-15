@@ -34,6 +34,7 @@ socket.on('update playerboard', (playerBoard) => {
     document.querySelector('#player-board').innerHTML = '';
     for(const [key, value] of Object.entries(playerBoard)) {
         var node = document.createElement('li');
+        node.className = 'player-list-item';
         var textnode = document.createTextNode(value.name);
         node.appendChild(textnode);
 
