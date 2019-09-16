@@ -3,6 +3,7 @@ const express = require('express');
 const http = require('http');
 const path = require('path');
 const socketIO = require('socket.io');
+const { Client } = require('pg');
 
 const app = express();
 const server = http.Server(app);
