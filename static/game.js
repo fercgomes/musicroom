@@ -79,8 +79,3 @@ volKnob.addEventListener('change', (e) => {
     let volume = e.target.value;
     gNoteVol = (volume / 100.0);
 });
-
-let binSock = document.getElementById('binsock');
-binSock.addEventListener('click', () => {
-    io.emit('test');
-});
