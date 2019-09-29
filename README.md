@@ -1,5 +1,6 @@
 # Music Room
 [Music Room](http://musicroom.cc) is a collaborative music project in its inception phase. It aims to build a platform to allow people to play music over the internet. There's no fixed course of action as of right now, so suggestions are welcome (very welcome, I have no idea what I'm doing).
+
 ![No idea what I'm doing](https://i.chzbgr.com/full/5913109760/h123D7041/)
 
 # Current development
