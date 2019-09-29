@@ -47,10 +47,11 @@ socket.on('update playerboard', (playerBoard) => {
     }
 });
 
+let osc = new SoundSynth(audioCtx);
+
 // Play tone
 socket.on('play tone', (props) => {
     console.log("Receveing tone. Frequency: " + props.noteFreq + ', author: ' + props.author);
-    let osc = new SoundSynth(audioCtx);
     adsr_t = [0.1, 0.2, 0.2, 0.2]; // in seconds
     adsr_a = [0.5, 0.4, 0.4, 0.0]; // [0 ~1];
     osc.play(props.noteFreq, props.noteType, adsr_t, adsr_a, props.noteVol);
@@ -77,4 +78,9 @@ var volKnob = document.getElementById('volume-knob');
 volKnob.addEventListener('change', (e) => {
     let volume = e.target.value;
     gNoteVol = (volume / 100.0);
+});
+
+let binSock = document.getElementById('binsock');
+binSock.addEventListener('click', () => {
+    io.emit('test');
 });

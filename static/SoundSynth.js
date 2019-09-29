@@ -1,5 +1,4 @@
 class SoundSynth {
-
     constructor(context) {
         this.context = context;
         this.adsrCurve = new Float32Array(100);
@@ -11,10 +10,13 @@ class SoundSynth {
 
         this.gainNode2 = this.context.createGain();
         this.gainNode2.gain.value = vol; // ramp
+
         
         this.oscillator = this.context.createOscillator();
         this.oscillator.type = type;
         this.oscillator.frequency.value = freq;
+
+        let dest = this.context.createMediaStreamDestination();
 
         this.oscillator.connect(this.gainNode);
         this.gainNode.connect(this.gainNode2);

@@ -9,6 +9,9 @@ const app = express();
 const server = http.Server(app);
 const io = socketIO(server);
 
+const BinaryServer = require('binaryjs').BinaryServer;
+const binaryserver = new BinaryServer({server: server, path: '/binary-endpoint'})
+
 var port = process.env.PORT || 3000;
 
 let playerBoard = {};
@@ -67,7 +70,6 @@ io.on('connection', function(socket) {
         isPlayingTimer: 0,
         isPlaying: false
     };
-
 
     socket.on('disconnect', () => {
         console.log(socket.id + " has disconnected.");
