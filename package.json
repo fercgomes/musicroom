@@ -12,7 +12,7 @@
   "dependencies": {
     "binary": "^0.3.0",
     "binaryjs": "^0.2.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "pg": "^7.12.1",
     "socket.io": "^2.2.0"
   }
