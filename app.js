@@ -26,6 +26,27 @@ function getRandomColor() {
 }
 
 app.use('/static', express.static(__dirname + '/static')); // routing
+app.get('/posthog-config.js', (request, response) => {
+    const posthogKey = process.env.POSTHOG_KEY;
+    const posthogHost = process.env.POSTHOG_HOST;
+
+    if (!posthogKey || !posthogHost) {
+        if (process.env.NODE_ENV !== 'production') {
+            const missingVariable = posthogKey ? 'POSTHOG_HOST' : 'POSTHOG_KEY';
+            response.type('application/javascript').send(
+                `throw new Error('${missingVariable} variable required by PostHog is missing or un-configured, this causes events to be silently missed. This error stops appearing once ${missingVariable} is configured');`
+            );
+            return;
+        }
+
+        response.status(204).end();
+        return;
+    }
+
+    response.type('application/javascript').send(
+        `window.POSTHOG_CONFIG = ${JSON.stringify({ key: posthogKey, host: posthogHost })};`
+    );
+});
 app.get('/', (request, response) => {
     response.sendFile(path.join(__dirname, 'index.html'));
 });
