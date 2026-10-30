@@ -9,6 +9,24 @@ let socket = io();
 let noteFreq = 440;
 let gNoteVol = 0.5;
 
+function captureEvent(event, properties) {
+    if (window.posthog) {
+        window.posthog.capture(event, properties);
+    }
+}
+
+function logMusicRoom(message, attributes) {
+    if (window.posthog && window.posthog.logger) {
+        window.posthog.logger.info(message, attributes);
+    }
+}
+
+socket.on('connect', () => {
+    logMusicRoom('realtime music session connected', {
+        event: 'realtime_session_connected'
+    });
+});
+
 // Create frequency table
 let freqTable = [];
 function createFreqTable(baseFrequency, size) {
@@ -26,6 +44,10 @@ document.querySelector('#set-username').addEventListener('click', function() {
     let username = document.getElementById('user').value;
 
     socket.emit('change username', username);
+    captureEvent('player_name_set');
+    logMusicRoom('player name submitted', {
+        event: 'player_name_submitted'
+    });
 });
 
 // Update playboard
@@ -69,6 +91,17 @@ keyboard.addEventListener('change', (e) => {
             noteType: noteTypeElem.value,
             noteVol: gNoteVol,
         });
+        captureEvent('tone_played', {
+            note_index: thisNoteIdx,
+            waveform: noteTypeElem.value,
+            volume_percent: gNoteVol * 100,
+        });
+        logMusicRoom('tone broadcast requested', {
+            event: 'tone_broadcast_requested',
+            note_index: thisNoteIdx,
+            waveform: noteTypeElem.value,
+            volume_percent: gNoteVol * 100
+        });
     }
 	else
 		console.log("Note-Off:"+e.note[1]);
@@ -78,4 +111,11 @@ var volKnob = document.getElementById('volume-knob');
 volKnob.addEventListener('change', (e) => {
     let volume = e.target.value;
     gNoteVol = (volume / 100.0);
+    captureEvent('volume_changed', {
+        volume_percent: Number(volume),
+    });
+    logMusicRoom('volume adjusted', {
+        event: 'volume_adjusted',
+        volume_percent: Number(volume)
+    });
 });
