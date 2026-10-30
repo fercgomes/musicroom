@@ -1,4 +1,5 @@
 // Deps
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const path = require('path');
@@ -26,6 +27,15 @@ function getRandomColor() {
 }
 
 app.use('/static', express.static(__dirname + '/static')); // routing
+app.get('/posthog-config.js', (request, response) => {
+    response.type('application/javascript').send(
+        'window.__POSTHOG_CONFIG__ = ' + JSON.stringify({
+            projectToken: process.env.POSTHOG_PROJECT_TOKEN,
+            host: process.env.POSTHOG_HOST,
+            isDevelopment: process.env.NODE_ENV !== 'production'
+        }) + ';'
+    );
+});
 app.get('/', (request, response) => {
     response.sendFile(path.join(__dirname, 'index.html'));
 });

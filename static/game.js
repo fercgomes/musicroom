@@ -18,6 +18,18 @@ function createFreqTable(baseFrequency, size) {
 }
 createFreqTable(440.0, 25);
 
+function captureEvent(event, properties) {
+    if (window.posthog && window.posthog.capture) {
+        window.posthog.capture(event, properties);
+    }
+}
+
+function musicRoomLogger(message, attributes) {
+    if (window.posthog && window.posthog.logger) {
+        window.posthog.logger.info(message, attributes);
+    }
+}
+
 let noteTypeElem = document.querySelector('#note-type-list');
 let volumeElem = document.querySelector('#volume-knob');
 
@@ -26,6 +38,10 @@ document.querySelector('#set-username').addEventListener('click', function() {
     let username = document.getElementById('user').value;
 
     socket.emit('change username', username);
+    captureEvent('player_name_set');
+    musicRoomLogger('player name submission requested', {
+        event: 'player_name_set'
+    });
 });
 
 // Update playboard
@@ -52,6 +68,9 @@ let osc = new SoundSynth(audioCtx);
 // Play tone
 socket.on('play tone', (props) => {
     console.log("Receveing tone. Frequency: " + props.noteFreq + ', author: ' + props.author);
+    musicRoomLogger('tone playback received', {
+        event: 'tone_playback_received'
+    });
     adsr_t = [0.1, 0.2, 0.2, 0.2]; // in seconds
     adsr_a = [0.5, 0.4, 0.4, 0.0]; // [0 ~1];
     osc.play(props.noteFreq, props.noteType, adsr_t, adsr_a, props.noteVol);
@@ -68,6 +87,15 @@ keyboard.addEventListener('change', (e) => {
             noteFreq: freqTable[thisNoteIdx],
             noteType: noteTypeElem.value,
             noteVol: gNoteVol,
+        });
+        captureEvent('tone_played', {
+            note_index: thisNoteIdx,
+            waveform: noteTypeElem.value
+        });
+        musicRoomLogger('tone broadcast requested', {
+            event: 'tone_broadcast_requested',
+            note_index: thisNoteIdx,
+            waveform: noteTypeElem.value
         });
     }
 	else
