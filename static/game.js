@@ -4,7 +4,18 @@ var audioCtx = new AudioContext({
   sampleRate: 44100,
 });
 
+// Boot Novus by Pendo once with an anonymous visitor
+pendo.initialize({
+    visitor: {
+        id: ''
+    }
+});
+
 let socket = io();
+
+// Last player identity sent to Pendo, so identify only runs when it changes
+let pendoVisitorId = null;
+let pendoVisitorName = null;
 
 let noteFreq = 440;
 let gNoteVol = 0.5;
@@ -30,6 +41,19 @@ document.querySelector('#set-username').addEventListener('click', function() {
 
 // Update playboard
 socket.on('update playerboard', (playerBoard) => {
+    // Identify this player in Pendo when the connection or name changes
+    let player = playerBoard[socket.id];
+    if(player && (socket.id !== pendoVisitorId || player.name !== pendoVisitorName)) {
+        pendoVisitorId = socket.id;
+        pendoVisitorName = player.name;
+        pendo.identify({
+            visitor: {
+                id: socket.id,
+                full_name: player.name
+            }
+        });
+    }
+
     // Reset list
     document.querySelector('#player-board').innerHTML = '';
     for(const [key, value] of Object.entries(playerBoard)) {
