@@ -55,6 +55,21 @@ socket.on('play tone', (props) => {
     adsr_t = [0.1, 0.2, 0.2, 0.2]; // in seconds
     adsr_a = [0.5, 0.4, 0.4, 0.0]; // [0 ~1];
     osc.play(props.noteFreq, props.noteType, adsr_t, adsr_a, props.noteVol);
+
+    // Pendo: a broadcast note was played through this listener's synth
+    try {
+        if (window.pendo && typeof window.pendo.track === 'function') {
+            window.pendo.track('Note played back for listeners', {
+                note_freq: Number(props.noteFreq),
+                note_type: String(props.noteType),
+                note_vol: Number(props.noteVol),
+                author_is_anonymous: props.author === 'anonymous',
+                audio_state: audioCtx.state
+            });
+        }
+    } catch (err) {
+        console.error('Pendo track failed: ' + err.message);
+    }
 });
 
 // Set keyboard
